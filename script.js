@@ -31,3 +31,22 @@ document.addEventListener('click', (event) => {
         sidebar.classList.remove('open');
     }
 });
+
+// Función para abrir WhatsApp con un mensaje personalizado
+function openWhatsApp(productName, price) {
+    const phoneNumber = "1234567890"; // Reemplaza con tu número de teléfono
+    const message = `Hola, estoy interesado en comprar este producto: ${productName} por un precio de ${price}. ¿Podrías darme más información?`;
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappURL = `https://wa.me/${+18493904282}?text=${encodedMessage}`;
+    window.open(whatsappURL, '_blank');
+}
+
+// Agregar evento de clic a los botones de compra
+document.querySelectorAll('.btn-primary').forEach(button => {
+    button.addEventListener('click', () => {
+        const productCard = button.closest('.product-card');
+        const productName = productCard.querySelector('.product-name').textContent;
+        const price = productCard.querySelector('.price').textContent;
+        openWhatsApp(productName, price);
+    });
+});
