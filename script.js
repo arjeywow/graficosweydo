@@ -32,12 +32,40 @@ document.addEventListener('click', (event) => {
     }
 });
 
+// Función para obtener el país del usuario
+function getUserCountry(callback) {
+    fetch('https://ipinfo.io/json?token=a0395a25568001') // Reemplaza TU_TOKEN con tu token de ipinfo.io
+        .then(response => response.json())
+        .then(data => {
+            const country = data.country; // Código de país (ejemplo: "US" para Estados Unidos)
+            callback(country);
+        })
+        .catch(error => {
+            console.error('Error al obtener la ubicación:', error);
+            callback(null); // En caso de error, usar un número por defecto
+        });
+}
+
 // Función para abrir WhatsApp con un mensaje personalizado
-function openWhatsApp(productName, price) {
-    const phoneNumber = "1234567890"; // Reemplaza con tu número de teléfono
-    const message = `Hola, estoy interesado en comprar este producto: ${productName} por un precio de ${price}. ¿Podrías darme más información?`;
+function openWhatsApp(productName, price, country) {
+    let phoneNumber;
+
+    // Asignar el número de teléfono según el país
+    switch (country) {
+        case 'US': // Estados Unidos
+            phoneNumber = "+19174313384"; // Reemplaza con el número de EE.UU.
+            break;
+        case 'DO': // República Dominicana
+            phoneNumber = "+18493904282"; // Reemplaza con el número de República Dominicana
+            break;
+        default: // Número por defecto (puedes cambiarlo)
+            phoneNumber = "+182939733600"; // Reemplaza con un número por defecto
+            break;
+    }
+
+    const message = `Hola, estoy interesado en comprar el producto: ${productName} por un precio de ${price}. ¿Podrías darme más información?`;
     const encodedMessage = encodeURIComponent(message);
-    const whatsappURL = `https://wa.me/${+18493904282}?text=${encodedMessage}`;
+    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
     window.open(whatsappURL, '_blank');
 }
 
@@ -47,6 +75,10 @@ document.querySelectorAll('.btn-primary').forEach(button => {
         const productCard = button.closest('.product-card');
         const productName = productCard.querySelector('.product-name').textContent;
         const price = productCard.querySelector('.price').textContent;
-        openWhatsApp(productName, price);
+
+        // Obtener el país del usuario y abrir WhatsApp
+        getUserCountry(country => {
+            openWhatsApp(productName, price, country);
+        });
     });
 });
