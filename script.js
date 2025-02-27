@@ -66,7 +66,7 @@ function openWhatsApp(productName, price, country) {
     const message = `Hola, estoy interesado en comprar el producto: ${productName} por un precio de ${price}. ¿Podrías darme más información?`;
     const encodedMessage = encodeURIComponent(message);
     const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    window.open(whatsappURL, '_blank');
+    window.open(whatsappURL, '_self');
 }
 
 // Agregar evento de clic a los botones de compra
