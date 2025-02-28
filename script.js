@@ -63,11 +63,25 @@ function openWhatsApp(productName, price, country) {
             break;
     }
 
-    const message = `Hola, estoy interesado en comprar el producto: ${productName} por un precio de ${price}. ¿Podrías darme más información?`;
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-    window.open(whatsappURL, '_self');
+// Mensaje personalizado según la acción
+const message = isPersonalizar
+? `Hola, quiero personalizar este artículo: ${productName}. ¿Podrías darme más información?`
+: `Hola, estoy interesado en comprar el producto: ${productName} por un precio de ${price}. ¿Podrías darme más información?`;
+
+const encodedMessage = encodeURIComponent(message);
+const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+window.open(whatsappURL, '_self');
 }
+
+// Función común para manejar ambos botones
+function handleButtonClick(event) {
+const button = event.target;
+const productCard = button.closest('.product-card');
+const productName = productCard.querySelector('.product-name').textContent;
+const price = productCard.querySelector('.price').textContent;
+
+// Determinar si es el botón de "Personalizar"
+const isPersonalizar = button.classList.contains('btn-personalizar');
 
 // Agregar evento de clic a los botones de compra
 document.querySelectorAll('.btn-primary').forEach(button => {
@@ -76,9 +90,8 @@ document.querySelectorAll('.btn-primary').forEach(button => {
         const productName = productCard.querySelector('.product-name').textContent;
         const price = productCard.querySelector('.price').textContent;
 
-        // Obtener el país del usuario y abrir WhatsApp
-        getUserCountry(country => {
-            openWhatsApp(productName, price, country);
-        });
+    // Obtener el país del usuario y abrir WhatsApp
+    getUserCountry(country => {
+        openWhatsApp(productName, price, country, isPersonalizar);
     });
-});
+}
